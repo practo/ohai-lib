@@ -16,6 +16,6 @@
         android:layout_height="wrap_content"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:text="Ohai!"
-        android:id="@+id/textView"
+        android:textColor="@color/colorPrimary"
         android:layout_centerInParent="true"/>
 </RelativeLayout>
