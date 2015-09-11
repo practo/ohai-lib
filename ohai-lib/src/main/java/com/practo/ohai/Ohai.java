@@ -13,7 +13,6 @@ public class Ohai {
     private Bundle mBundle;
 
     public static Ohai getInstance(Context context) {
-
         if(mOhai == null) {
             mOhai =  new Ohai(context);
         }
@@ -33,6 +32,11 @@ public class Ohai {
 
     public Ohai setMobile(String mobile) {
         mBundle.putString(BaseRequestHelper.PARAM_PHONE_NUMBER, mobile);
+        return mOhai;
+    }
+
+    public Ohai setLocation(String city) {
+        mBundle.putString(BaseRequestHelper.PARAM_PHONE_NUMBER, city);
         return mOhai;
     }
 

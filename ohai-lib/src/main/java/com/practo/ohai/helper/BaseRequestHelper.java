@@ -35,6 +35,7 @@ public class BaseRequestHelper {
     public static final String PARAM_NAME = "patient_name";
     public static final String PARAM_EMAIL = "email_id";
     public static final String PARAM_PHONE_NUMBER = "phone_number";
+    public static final String PARAM_LOCATION = "location";
     public static final String PARAM_GCM_ID = "gcm_id";
 
 
