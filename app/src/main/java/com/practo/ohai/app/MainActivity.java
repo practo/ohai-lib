@@ -1,7 +1,6 @@
 package com.practo.ohai.app;
 
 import android.os.Bundle;
-import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 
 import com.practo.ohai.Ohai;

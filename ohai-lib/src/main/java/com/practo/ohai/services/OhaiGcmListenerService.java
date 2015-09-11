@@ -15,13 +15,12 @@ import com.practo.ohai.BuildConfig;
 import com.practo.ohai.R;
 import com.practo.ohai.entity.NotificationPayload;
 import com.practo.ohai.helper.BaseRequestHelper;
+import com.practo.ohai.receivers.NotificationBroadcastReceiver;
 import com.practo.ohai.utils.Utils;
 
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
-
-import com.practo.ohai.receivers.NotificationBroadcastReceiver;
 
 public class OhaiGcmListenerService extends GcmListenerService {
 
