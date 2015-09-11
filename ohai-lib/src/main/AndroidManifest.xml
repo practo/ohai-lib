@@ -42,6 +42,13 @@
             android:name=".services.OhaiRegistrationIntentService"
             android:exported="false" >
         </service>
+
+        <receiver
+            android:name=".receivers.NotificationBroadcastReceiver" >
+            <intent-filter>
+                <action android:name="com.practo.ohai.action.NOTIFICATION_CANCELLED" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

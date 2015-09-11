@@ -7,6 +7,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestTickle;
 import com.practo.ohai.OhaiApplication;
 import com.practo.ohai.OhaiConfig;
+import com.practo.ohai.entity.DeviceNotificationLog;
 import com.practo.ohai.entity.DeviceRegistration;
 import com.practo.ohai.utils.PractoGsonRequest;
 import com.practo.ohai.utils.PreferenceUtils;
@@ -21,6 +22,8 @@ public class BaseRequestHelper {
 
 	public static final String URL_DEVICES = "/devices";
 
+	public static final String URL_LOGS = "/logs";
+
 	protected Context mContext;
 
 	protected boolean mRunAsync;
@@ -34,9 +37,11 @@ public class BaseRequestHelper {
     public static final String ACCEPT_TYPE_JSON = "application/json";
     public static final String PARAM_NAME = "patient_name";
     public static final String PARAM_EMAIL = "email_id";
-    public static final String PARAM_PHONE_NUMBER = "phone_number";
+    public static final String PARAM_MOBILE_NUMBER = "mobile_number";
     public static final String PARAM_LOCATION = "location";
     public static final String PARAM_GCM_ID = "gcm_id";
+    public static final String PARAM_NOTIFICATION_ID = "notification_id";
+    public static final String PARAM_OPENED = "opened";
 
 
 	public static BaseRequestHelper getInstance(Context context) {
@@ -80,4 +85,45 @@ public class BaseRequestHelper {
             PreferenceUtils.set(mContext, PreferenceUtils.IS_REGISTERED_TO_SERVER, Boolean.FALSE);
         }
 	}
+
+
+    public void requestUpdate(JSONObject params) {
+        PractoGsonRequest<DeviceRegistration> request = new PractoGsonRequest<>(Request.Method.PATCH,
+                API_URL + URL_DEVICES, DeviceRegistration.class, null,
+                params,
+                null, null);
+        RequestTickle volleyTickle = OhaiApplication.getInstance().getRequestTickle();
+        volleyTickle.add(request);
+        NetworkResponse response = volleyTickle.start();
+        if (isSuccessfulResponse(response)) {
+            PreferenceUtils.set(mContext, PreferenceUtils.IS_REGISTERED_TO_SERVER, Boolean.TRUE);
+        } else {
+            PreferenceUtils.set(mContext, PreferenceUtils.IS_REGISTERED_TO_SERVER, Boolean.FALSE);
+        }
+    }
+
+    public void acknowledgeNotification(JSONObject params) {
+		PractoGsonRequest<DeviceRegistration> request = new PractoGsonRequest<>(Request.Method.POST,
+				API_URL + URL_DEVICES, DeviceRegistration.class, null,
+				params,
+				null, null);
+		RequestTickle volleyTickle = OhaiApplication.getInstance().getRequestTickle();
+		volleyTickle.add(request);
+		NetworkResponse response = volleyTickle.start();
+		if (isSuccessfulResponse(response)) {
+			PreferenceUtils.set(mContext, PreferenceUtils.IS_REGISTERED_TO_SERVER, Boolean.TRUE);
+		} else {
+			PreferenceUtils.set(mContext, PreferenceUtils.IS_REGISTERED_TO_SERVER, Boolean.FALSE);
+		}
+	}
+
+    public void requestNotificationCancellationLog(JSONObject params) {
+        PractoGsonRequest<DeviceNotificationLog> request = new PractoGsonRequest<>(Request.Method.POST,
+                API_URL + URL_LOGS, DeviceNotificationLog.class, null,
+                params,
+                null, null);
+        RequestTickle volleyTickle = OhaiApplication.getInstance().getRequestTickle();
+        volleyTickle.add(request);
+        volleyTickle.start();
+    }
  }

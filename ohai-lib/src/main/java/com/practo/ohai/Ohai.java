@@ -5,6 +5,7 @@ import android.os.Bundle;
 
 import com.practo.ohai.helper.BaseRequestHelper;
 import com.practo.ohai.services.OhaiRegistrationIntentService;
+import com.practo.ohai.utils.PreferenceUtils;
 
 public class Ohai {
 
@@ -31,12 +32,12 @@ public class Ohai {
     }
 
     public Ohai setMobile(String mobile) {
-        mBundle.putString(BaseRequestHelper.PARAM_PHONE_NUMBER, mobile);
+        mBundle.putString(BaseRequestHelper.PARAM_MOBILE_NUMBER, mobile);
         return mOhai;
     }
 
     public Ohai setLocation(String city) {
-        mBundle.putString(BaseRequestHelper.PARAM_PHONE_NUMBER, city);
+        mBundle.putString(BaseRequestHelper.PARAM_LOCATION, city);
         return mOhai;
     }
 
@@ -46,6 +47,16 @@ public class Ohai {
     }
 
     public void start() {
-        OhaiRegistrationIntentService.register(mContext, mBundle);
+        if(!PreferenceUtils.getBooleanPrefs(mContext, PreferenceUtils.IS_REGISTERED_TO_SERVER)) {
+            OhaiRegistrationIntentService.register(mContext, mBundle);
+        }
+    }
+
+    public void update() {
+        if(PreferenceUtils.getBooleanPrefs(mContext, PreferenceUtils.IS_REGISTERED_TO_SERVER)) {
+            OhaiRegistrationIntentService.update(mContext, mBundle);
+        } else {
+            OhaiRegistrationIntentService.register(mContext, mBundle);
+        }
     }
 }

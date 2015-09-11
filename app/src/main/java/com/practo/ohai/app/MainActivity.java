@@ -1,6 +1,7 @@
 package com.practo.ohai.app;
 
 import android.os.Bundle;
+import android.support.v4.app.NotificationCompat;
 import android.support.v7.app.AppCompatActivity;
 
 import com.practo.ohai.Ohai;
@@ -12,7 +13,8 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
-        Ohai.getInstance(this).setEmail("twntee@gmail.com").setName("Rachit").start();
+        Ohai.getInstance(this).setEmail("twntee@gmail.com").setName("Rachit").setLocation("Bangalore").setMobile
+                ("8004412247")
+                .start();
     }
 }
