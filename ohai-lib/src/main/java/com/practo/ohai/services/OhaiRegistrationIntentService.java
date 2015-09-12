@@ -109,7 +109,7 @@ public class OhaiRegistrationIntentService extends IntentService {
 
     private void doNotificationCancelLog(Bundle data) throws IOException, JSONException {
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put(BaseRequestHelper.PARAM_GCM_ID, data.getString(BaseRequestHelper.PARAM_NOTIFICATION_ID, ""));
+        jsonObject.put(BaseRequestHelper.PARAM_NOTIFICATION_ID, data.getString(BaseRequestHelper.PARAM_NOTIFICATION_ID, ""));
         jsonObject.put(BaseRequestHelper.PARAM_OPENED, Boolean.FALSE);
         BaseRequestHelper.getInstance(this).requestNotificationCancellationLog(jsonObject);
     }
