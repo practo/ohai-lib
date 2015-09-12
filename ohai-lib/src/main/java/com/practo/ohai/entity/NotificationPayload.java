@@ -7,23 +7,11 @@ import com.google.gson.annotations.SerializedName;
 
 public class NotificationPayload implements Parcelable {
 
-    @SerializedName("title")
-    public String title = "";
+    @SerializedName("notification_id")
+    public String notificationId = "";
 
-    @SerializedName("message")
-    public String message = "";
-
-    @SerializedName("image_url")
-    public String imageUrl = "";
-
-    @SerializedName("icon_url")
-    public String iconUrl = "";
-
-    @SerializedName("action1")
-    public String primaryAction = "";
-
-    @SerializedName("action2")
-    public String secondaryAction = "";
+    @SerializedName("content")
+    public NotificationPayloadContent content;
 
     @Override
     public int describeContents() {
@@ -32,13 +20,13 @@ public class NotificationPayload implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeString(this.title);
-        dest.writeString(this.message);
+        dest.writeString(this.notificationId);
+        dest.writeParcelable(this.content, 0);
     }
 
     protected NotificationPayload(Parcel in) {
-        this.title = in.readString();
-        this.message = in.readString();
+        this.notificationId = in.readString();
+        this.content = in.readParcelable(NotificationPayloadContent.class.getClassLoader());
     }
 
     public static final Creator<NotificationPayload> CREATOR = new Creator<NotificationPayload>() {

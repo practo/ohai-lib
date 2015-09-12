@@ -14,6 +14,7 @@ import com.google.gson.Gson;
 import com.practo.ohai.BuildConfig;
 import com.practo.ohai.R;
 import com.practo.ohai.entity.NotificationPayload;
+import com.practo.ohai.entity.NotificationPayloadContent;
 import com.practo.ohai.helper.BaseRequestHelper;
 import com.practo.ohai.receivers.NotificationBroadcastReceiver;
 import com.practo.ohai.utils.Utils;
@@ -44,8 +45,7 @@ public class OhaiGcmListenerService extends GcmListenerService {
                         .setAutoCancel(Boolean.TRUE)
                         .setPriority(NotificationCompat.PRIORITY_MAX)
                         .setVisibility(NotificationCompat.VISIBILITY_PUBLIC)
-                        .setSmallIcon(R.drawable.ic_notify)
-                        .setDeleteIntent(getDeleteIntent(""));
+                        .setSmallIcon(R.drawable.ic_notify);
     }
 
     @Override
@@ -55,7 +55,7 @@ public class OhaiGcmListenerService extends GcmListenerService {
             if(!Utils.isEmptyString(message)) {
                 Gson gson = new Gson();
                 NotificationPayload notificationPayload = gson.fromJson(message, NotificationPayload.class);
-                showNotification(notificationPayload);
+                showNotification(notificationPayload.content, notificationPayload.notificationId);
             }
         } catch (IOException e) {
             e.printStackTrace();
@@ -63,30 +63,35 @@ public class OhaiGcmListenerService extends GcmListenerService {
         super.onMessageReceived(from, data);
     }
 
-    private void showNotification(NotificationPayload notificationPayload) throws IOException {
-        String title = notificationPayload.title;
+    private void showNotification(NotificationPayloadContent notificationPayloadContent, String notificationId) throws
+            IOException {
+        String title = notificationPayloadContent.title;
         if(!Utils.isEmptyString(title)) {
             mBuilder.setContentTitle(title);
         }
 
-        String message = notificationPayload.message;
+        String message = notificationPayloadContent.message;
         if(!Utils.isEmptyString(message)) {
-            mBuilder.setContentTitle(message);
+            mBuilder.setContentText(message);
         }
 
-        String iconUrl = notificationPayload.iconUrl;
+        String iconUrl = notificationPayloadContent.iconUrl;
         if(!Utils.isEmptyString(iconUrl)) {
             setNotificationBigImage(iconUrl);
         }
 
-        String imageUrl = notificationPayload.imageUrl;
+        String imageUrl = notificationPayloadContent.imageUrl;
         if(!Utils.isEmptyString(imageUrl)) {
             setStyle(title, message, imageUrl);
         }
 
-        String primaryAction = notificationPayload.primaryAction;
+        String primaryAction = notificationPayloadContent.primaryAction;
         if(!Utils.isEmptyString(primaryAction)) {
             mBuilder.setContentIntent(getActionIntent(""));
+        }
+
+        if(!Utils.isEmptyString(notificationId)) {
+            mBuilder.setDeleteIntent(getDeleteIntent(notificationId));
         }
 
         mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
@@ -122,8 +127,7 @@ public class OhaiGcmListenerService extends GcmListenerService {
         notificationStyle.setSummaryText(summary);
 
         try {
-            bigPicture = BitmapFactory.decodeStream(
-                    (InputStream) new URL(url).getContent());
+            bigPicture = BitmapFactory.decodeStream((InputStream) new URL(url).getContent());
         } catch (IOException e) {
             e.printStackTrace();
         }
