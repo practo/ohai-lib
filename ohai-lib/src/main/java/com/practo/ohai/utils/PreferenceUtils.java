@@ -12,6 +12,9 @@ public class PreferenceUtils {
 
 	public static final String IS_REGISTERED_TO_SERVER = "is_registered_to_server";
 
+	public static final String CURRENT_NOTIFICATION_COUNT = "current_notification_count";
+
+
     public static Boolean getBooleanPrefs(Context ctx, String key) {
 		return PreferenceManager.getDefaultSharedPreferences(ctx).getBoolean(key, false);
 	}

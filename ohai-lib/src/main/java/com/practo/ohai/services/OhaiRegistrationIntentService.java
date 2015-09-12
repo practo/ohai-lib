@@ -21,6 +21,8 @@ public class OhaiRegistrationIntentService extends IntentService {
     private static final String ACTION_REFRESH = BuildConfig.APPLICATION_ID + ".action.REFRESH";
     private static final String ACTION_NOTIFICATION_CANCELLED = BuildConfig.APPLICATION_ID + ".action" +
             ".NOTIFICATION_CANCELLED";
+    private static final String ACTION_NOTIFICATION_OPEN = BuildConfig.APPLICATION_ID + ".action" +
+            ".NOTIFICATION_OPEN";
     private static final String ACTION_UPDATE = BuildConfig.APPLICATION_ID + ".action" +
             ".UPDATE";
     private static final String AUTHORIZED_ENTITY = "27481646441";
@@ -36,6 +38,13 @@ public class OhaiRegistrationIntentService extends IntentService {
     public static void logNotificationCancellation(Context context, Bundle params) {
         Intent logCancellationIntent = new Intent(context, OhaiRegistrationIntentService.class);
         logCancellationIntent.setAction(ACTION_NOTIFICATION_CANCELLED);
+        logCancellationIntent.putExtras(params);
+        context.startService(logCancellationIntent);
+    }
+
+    public static void logNotificationOpen(Context context, Bundle params) {
+        Intent logCancellationIntent = new Intent(context, OhaiRegistrationIntentService.class);
+        logCancellationIntent.setAction(ACTION_NOTIFICATION_OPEN);
         logCancellationIntent.putExtras(params);
         context.startService(logCancellationIntent);
     }
@@ -70,6 +79,8 @@ public class OhaiRegistrationIntentService extends IntentService {
                 doNotificationCancelLog(intent.getExtras());
             } else if(ACTION_UPDATE.equals(action)) {
                 doUpdate(intent.getExtras());
+            } else if(ACTION_NOTIFICATION_OPEN.equals(action)) {
+                doNotificationOpen(intent.getExtras());
             }
         } catch (Exception e) {
             e.printStackTrace();
@@ -109,8 +120,15 @@ public class OhaiRegistrationIntentService extends IntentService {
 
     private void doNotificationCancelLog(Bundle data) throws IOException, JSONException {
         JSONObject jsonObject = new JSONObject();
-        jsonObject.put(BaseRequestHelper.PARAM_NOTIFICATION_ID, data.getString(BaseRequestHelper.PARAM_NOTIFICATION_ID, ""));
+        jsonObject.put(BaseRequestHelper.PARAM_NOTIFICATION_ID, data.getString(BaseRequestHelper.PARAM_NOTIFICATION_ID));
         jsonObject.put(BaseRequestHelper.PARAM_OPENED, Boolean.FALSE);
+        BaseRequestHelper.getInstance(this).requestNotificationCancellationLog(jsonObject);
+    }
+
+    private void doNotificationOpen(Bundle data) throws IOException, JSONException {
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put(BaseRequestHelper.PARAM_NOTIFICATION_ID, data.getString(BaseRequestHelper.PARAM_NOTIFICATION_ID));
+        jsonObject.put(BaseRequestHelper.PARAM_OPENED, Boolean.TRUE);
         BaseRequestHelper.getInstance(this).requestNotificationCancellationLog(jsonObject);
     }
 

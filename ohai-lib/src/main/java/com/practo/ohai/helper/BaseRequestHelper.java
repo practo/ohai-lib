@@ -5,7 +5,7 @@ import android.content.Context;
 import com.android.volley.NetworkResponse;
 import com.android.volley.Request;
 import com.android.volley.RequestTickle;
-import com.practo.ohai.OhaiApplication;
+import com.android.volley.toolbox.VolleyTickle;
 import com.practo.ohai.OhaiConfig;
 import com.practo.ohai.entity.DeviceNotificationLog;
 import com.practo.ohai.entity.DeviceRegistration;
@@ -26,7 +26,7 @@ public class BaseRequestHelper {
 
 	protected Context mContext;
 
-	protected boolean mRunAsync;
+	protected RequestTickle mRequestTickle;
 
     public static final String X_AUTH_TOKEN_HEADER = "X-AUTH-TOKEN";
     public static final String X_PROFILE_TOKEN_HEADER = "X-PROFILE-TOKEN";
@@ -50,6 +50,7 @@ public class BaseRequestHelper {
 
 	public BaseRequestHelper(Context context) {
 		mContext = context;
+        mRequestTickle = VolleyTickle.newRequestTickle(mContext);
 	}
 
 	public String getApiToken() {
@@ -76,9 +77,8 @@ public class BaseRequestHelper {
                 API_URL + URL_DEVICES, DeviceRegistration.class, null,
                 params,
                 null, null);
-        RequestTickle volleyTickle = OhaiApplication.getInstance().getRequestTickle();
-        volleyTickle.add(request);
-        NetworkResponse response = volleyTickle.start();
+        mRequestTickle.add(request);
+        NetworkResponse response = mRequestTickle.start();
         if (isSuccessfulResponse(response)) {
             PreferenceUtils.set(mContext, PreferenceUtils.IS_REGISTERED_TO_SERVER, Boolean.TRUE);
         } else {
@@ -92,9 +92,8 @@ public class BaseRequestHelper {
                 API_URL + URL_DEVICES, DeviceRegistration.class, null,
                 params,
                 null, null);
-        RequestTickle volleyTickle = OhaiApplication.getInstance().getRequestTickle();
-        volleyTickle.add(request);
-        NetworkResponse response = volleyTickle.start();
+        mRequestTickle.add(request);
+        NetworkResponse response = mRequestTickle.start();
         if (isSuccessfulResponse(response)) {
             PreferenceUtils.set(mContext, PreferenceUtils.IS_REGISTERED_TO_SERVER, Boolean.TRUE);
         } else {
@@ -107,9 +106,8 @@ public class BaseRequestHelper {
 				API_URL + URL_DEVICES, DeviceRegistration.class, null,
 				params,
 				null, null);
-		RequestTickle volleyTickle = OhaiApplication.getInstance().getRequestTickle();
-		volleyTickle.add(request);
-		NetworkResponse response = volleyTickle.start();
+        mRequestTickle.add(request);
+		NetworkResponse response = mRequestTickle.start();
 		if (isSuccessfulResponse(response)) {
 			PreferenceUtils.set(mContext, PreferenceUtils.IS_REGISTERED_TO_SERVER, Boolean.TRUE);
 		} else {
@@ -122,8 +120,7 @@ public class BaseRequestHelper {
                 API_URL + URL_LOGS, DeviceNotificationLog.class, null,
                 params,
                 null, null);
-        RequestTickle volleyTickle = OhaiApplication.getInstance().getRequestTickle();
-        volleyTickle.add(request);
-        volleyTickle.start();
+        mRequestTickle.add(request);
+        mRequestTickle.start();
     }
  }

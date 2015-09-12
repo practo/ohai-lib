@@ -6,6 +6,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
 
@@ -22,17 +23,20 @@ import com.practo.ohai.utils.Utils;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.Random;
 
 public class OhaiGcmListenerService extends GcmListenerService {
 
     private NotificationManager mNotificationManager;
     private NotificationCompat.Builder mBuilder;
-    private static final int NOTIFICATION_ID = 1998;
     private static final int REQUEST_CODE_ACTION_PI = 1999;
     private static final int REQUEST_CODE_DELETE_PI = 2000;
-    private static final String ACTION_NOTIFICATION_CANCELLED = BuildConfig.APPLICATION_ID + ".action" +
+    public static final String ACTION_NOTIFICATION_CANCELLED = BuildConfig.APPLICATION_ID + ".action" +
             ".NOTIFICATION_CANCELLED";
+    public static final String ACTION_NOTIFICATION_VIEW = BuildConfig.APPLICATION_ID + ".action" +
+            ".NOTIFICATION_VIEW";
     private static final String MESSAGE = "message";
+    private static final String GROUP_TAG = "group_key_ohai";
 
     public OhaiGcmListenerService() {
     }
@@ -51,7 +55,7 @@ public class OhaiGcmListenerService extends GcmListenerService {
     @Override
     public void onMessageReceived(String from, Bundle data) {
         try {
-            String message = data.getString(MESSAGE, "");
+            String message = data.getString(MESSAGE);
             if(!Utils.isEmptyString(message)) {
                 Gson gson = new Gson();
                 NotificationPayload notificationPayload = gson.fromJson(message, NotificationPayload.class);
@@ -87,14 +91,16 @@ public class OhaiGcmListenerService extends GcmListenerService {
 
         String primaryAction = notificationPayloadContent.primaryAction;
         if(!Utils.isEmptyString(primaryAction)) {
-            mBuilder.setContentIntent(getActionIntent(""));
+            mBuilder.setContentIntent(getActionIntent(primaryAction, notificationId));
+            mBuilder.addAction(android.R.drawable.ic_menu_view, "Read more", getActionIntent(primaryAction, notificationId));
         }
 
         if(!Utils.isEmptyString(notificationId)) {
             mBuilder.setDeleteIntent(getDeleteIntent(notificationId));
         }
 
-        mNotificationManager.notify(NOTIFICATION_ID, mBuilder.build());
+        mBuilder.setGroup(GROUP_TAG);
+        mNotificationManager.notify(new Random().nextInt(), mBuilder.build());
     }
 
     private void setNotificationBigImage(String url) throws IOException {
@@ -105,9 +111,14 @@ public class OhaiGcmListenerService extends GcmListenerService {
         }
     }
 
-    private PendingIntent getActionIntent(String action) {
-        Intent intent = new Intent(action);
-        return PendingIntent.getActivity(this, REQUEST_CODE_ACTION_PI, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+    private PendingIntent getActionIntent(String actionUrl, String notificationId) {
+        Bundle extras = new Bundle();
+        extras.putString(BaseRequestHelper.PARAM_NOTIFICATION_ID, notificationId);
+        Intent intent = new Intent(this, NotificationBroadcastReceiver.class);
+        intent.setAction(ACTION_NOTIFICATION_VIEW);
+        intent.setData(Uri.parse(actionUrl));
+        intent.putExtras(extras);
+        return PendingIntent.getBroadcast(this, REQUEST_CODE_ACTION_PI, intent, PendingIntent.FLAG_UPDATE_CURRENT);
     }
 
     private PendingIntent getDeleteIntent(String notificationId) {
