@@ -4,7 +4,7 @@ Ohai Notification Library for android
 
 Add dependencies
 
-    compile "com.google.android.gms:play-services-gcm:+"
+    compile 'com.google.android.gms:play-services-gcm:+'
     compile 'dev.dworks.libs:volleyplus:+'
     compile 'com.google.code.gson:gson:+'
     
