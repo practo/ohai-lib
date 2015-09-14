@@ -12,5 +12,5 @@ And then add compile and add the generated .aar file as a new module.
 
 Add,
     
-    Ohai.getInstance(this).setEmail("").setName("")
+    Ohai.getInstance(context).setEmail("").setName("")
     .setLocation("").setMobile("").start();
