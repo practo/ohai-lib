@@ -9,6 +9,7 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.NotificationCompat;
+import android.util.Log;
 
 import com.google.android.gms.gcm.GcmListenerService;
 import com.google.gson.Gson;
@@ -90,9 +91,13 @@ public class OhaiGcmListenerService extends GcmListenerService {
         }
 
         String primaryAction = notificationPayloadContent.primaryAction;
+
+        Log.w(OhaiGcmListenerService.class.getName(), primaryAction + "");
+
         if(!Utils.isEmptyString(primaryAction)) {
             mBuilder.setContentIntent(getActionIntent(primaryAction, notificationId));
-            mBuilder.addAction(android.R.drawable.ic_menu_view, "Read more", getActionIntent(primaryAction, notificationId));
+            mBuilder.addAction(android.R.drawable.ic_menu_view, notificationPayloadContent.secondaryAction, getActionIntent
+                    (primaryAction, notificationId));
         }
 
         if(!Utils.isEmptyString(notificationId)) {

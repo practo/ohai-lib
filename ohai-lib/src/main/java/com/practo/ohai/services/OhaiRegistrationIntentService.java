@@ -43,10 +43,10 @@ public class OhaiRegistrationIntentService extends IntentService {
     }
 
     public static void logNotificationOpen(Context context, Bundle params) {
-        Intent logCancellationIntent = new Intent(context, OhaiRegistrationIntentService.class);
-        logCancellationIntent.setAction(ACTION_NOTIFICATION_OPEN);
-        logCancellationIntent.putExtras(params);
-        context.startService(logCancellationIntent);
+        Intent logNotificationOpenIntent = new Intent(context, OhaiRegistrationIntentService.class);
+        logNotificationOpenIntent.setAction(ACTION_NOTIFICATION_OPEN);
+        logNotificationOpenIntent.putExtras(params);
+        context.startService(logNotificationOpenIntent);
     }
 
     public static void refresh(Context context) {
@@ -90,11 +90,11 @@ public class OhaiRegistrationIntentService extends IntentService {
     private void doRegister(Bundle data) throws IOException, JSONException {
         JSONObject jsonObject = new JSONObject();
         String gcmRegistrationToken = InstanceID.getInstance(this).getToken(AUTHORIZED_ENTITY, SCOPE);
-        jsonObject.put(BaseRequestHelper.PARAM_EMAIL, data.getString(BaseRequestHelper.PARAM_EMAIL, ""));
+        jsonObject.put(BaseRequestHelper.PARAM_EMAIL, data.getString(BaseRequestHelper.PARAM_EMAIL));
         jsonObject.put(BaseRequestHelper.PARAM_GCM_ID, gcmRegistrationToken);
-        jsonObject.put(BaseRequestHelper.PARAM_LOCATION, data.getString(BaseRequestHelper.PARAM_LOCATION, ""));
-        jsonObject.put(BaseRequestHelper.PARAM_NAME, data.getString(BaseRequestHelper.PARAM_NAME, ""));
-        jsonObject.put(BaseRequestHelper.PARAM_MOBILE_NUMBER, data.getString(BaseRequestHelper.PARAM_MOBILE_NUMBER, ""));
+        jsonObject.put(BaseRequestHelper.PARAM_LOCATION, data.getString(BaseRequestHelper.PARAM_LOCATION));
+        jsonObject.put(BaseRequestHelper.PARAM_NAME, data.getString(BaseRequestHelper.PARAM_NAME));
+        jsonObject.put(BaseRequestHelper.PARAM_MOBILE_NUMBER, data.getString(BaseRequestHelper.PARAM_MOBILE_NUMBER));
 
         BaseRequestHelper.getInstance(this).requestRegistration(jsonObject);
     }
@@ -102,11 +102,11 @@ public class OhaiRegistrationIntentService extends IntentService {
     private void doUpdate(Bundle data) throws IOException, JSONException {
         JSONObject jsonObject = new JSONObject();
         String gcmRegistrationToken = InstanceID.getInstance(this).getToken(AUTHORIZED_ENTITY, SCOPE);
-        jsonObject.put(BaseRequestHelper.PARAM_EMAIL, data.getString(BaseRequestHelper.PARAM_EMAIL, ""));
+        jsonObject.put(BaseRequestHelper.PARAM_EMAIL, data.getString(BaseRequestHelper.PARAM_EMAIL));
         jsonObject.put(BaseRequestHelper.PARAM_GCM_ID, gcmRegistrationToken);
-        jsonObject.put(BaseRequestHelper.PARAM_LOCATION, data.getString(BaseRequestHelper.PARAM_LOCATION, ""));
-        jsonObject.put(BaseRequestHelper.PARAM_NAME, data.getString(BaseRequestHelper.PARAM_NAME, ""));
-        jsonObject.put(BaseRequestHelper.PARAM_MOBILE_NUMBER, data.getString(BaseRequestHelper.PARAM_MOBILE_NUMBER, ""));
+        jsonObject.put(BaseRequestHelper.PARAM_LOCATION, data.getString(BaseRequestHelper.PARAM_LOCATION));
+        jsonObject.put(BaseRequestHelper.PARAM_NAME, data.getString(BaseRequestHelper.PARAM_NAME));
+        jsonObject.put(BaseRequestHelper.PARAM_MOBILE_NUMBER, data.getString(BaseRequestHelper.PARAM_MOBILE_NUMBER));
 
         BaseRequestHelper.getInstance(this).requestUpdate(jsonObject);
     }
@@ -121,14 +121,14 @@ public class OhaiRegistrationIntentService extends IntentService {
     private void doNotificationCancelLog(Bundle data) throws IOException, JSONException {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put(BaseRequestHelper.PARAM_NOTIFICATION_ID, data.getString(BaseRequestHelper.PARAM_NOTIFICATION_ID));
-        jsonObject.put(BaseRequestHelper.PARAM_OPENED, Boolean.FALSE);
+        jsonObject.put(BaseRequestHelper.PARAM_OPENED, 0);
         BaseRequestHelper.getInstance(this).requestNotificationCancellationLog(jsonObject);
     }
 
     private void doNotificationOpen(Bundle data) throws IOException, JSONException {
         JSONObject jsonObject = new JSONObject();
         jsonObject.put(BaseRequestHelper.PARAM_NOTIFICATION_ID, data.getString(BaseRequestHelper.PARAM_NOTIFICATION_ID));
-        jsonObject.put(BaseRequestHelper.PARAM_OPENED, Boolean.TRUE);
+        jsonObject.put(BaseRequestHelper.PARAM_OPENED, 1);
         BaseRequestHelper.getInstance(this).requestNotificationCancellationLog(jsonObject);
     }
 
